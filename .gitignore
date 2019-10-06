@@ -328,11 +328,3 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-*.sln
-*.gitattributes
-*.filters
-*.vcxproj
-*.rc
-*.make
-*.gitignore
-/ofImGuiApp/imgui.ini
