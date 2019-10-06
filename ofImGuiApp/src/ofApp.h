@@ -1,8 +1,15 @@
-#pragma once
+// Copyright (c) 2019 Philippe Julien
+// Email    : pjulien21@gmail.com
+// LinkedIn : https://www.linkedin.com/in/philippe-julien-a80b2442/
+// License  : MIT
+//            https://opensource.org/licenses/MIT
+
+#ifndef OFAPP_H
+#define OFAPP_H
 
 #include "ofMain.h"
 
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp {
 
 	public:
 		void setup();
@@ -19,6 +26,7 @@ class ofApp : public ofBaseApp{
 		void mouseExited(int x, int y);
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
-		
+		void gotMessage(ofMessage msg);	
 };
+
+#endif

@@ -335,3 +335,4 @@ ASALocalRun/
 *.rc
 *.make
 *.gitignore
+/ofImGuiApp/imgui.ini
