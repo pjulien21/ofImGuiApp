@@ -1,4 +1,4 @@
-# ofImGuiApp
+# ofImGuiApp ![language](https://img.shields.io/badge/language-C++-orange) ![license](https://img.shields.io/badge/license-MIT-brightgreen)
 Provides an easy way to integrate [Dear ImGui](https://github.com/ocornut/imgui) to your openFrameworks projects.
 
 ## How it works
