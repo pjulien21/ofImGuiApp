@@ -1,5 +1,5 @@
 # ofImGuiApp
-Provides an easy way to integrate Dear ImGui to your openFrameworks projects.
+Provides an easy way to integrate [Dear ImGui](https://github.com/ocornut/imgui) to your openFrameworks projects.
 
 ## How it works
 Basically, the platform integration is done by `ofImGuiApp` class.
@@ -34,8 +34,8 @@ All you have to do is to `#include "ofImGuiApp.h"` and use `ofRunApp(new ofImGui
 #include "ofImGuiApp.h"
 
 int main() {
-	ofSetupOpenGL(1024, 768, OF_WINDOW);
-	ofRunApp(new ofImGuiApp<ofApp>());
+   ofSetupOpenGL(1024, 768, OF_WINDOW);
+   ofRunApp(new ofImGuiApp<ofApp>());
 }
 ```
 
