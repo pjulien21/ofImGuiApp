@@ -21,6 +21,13 @@ class ofImGuiApp : public T
    static_assert(std::is_base_of_v<ofBaseApp, T>, "Invalid template argument for ofImGuiApp<T>: T has to inherit from ofBaseApp.");
 
    public:
+                             // Perfect forwarding constructor
+      template<typename... Args>
+      ofImGuiApp(Args&&... args) :
+         T(std::forward<Args>(args)...)
+         {
+         }
+
       ~ofImGuiApp();
 
       void setup();
