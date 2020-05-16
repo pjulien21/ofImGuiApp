@@ -26,6 +26,8 @@ class ofImGuiApp : public T
       ofImGuiApp(Args&&... args) :
          T(std::forward<Args>(args)...)
          {
+         ofAddListener(ofEvents().keyPressed, this, &ofImGuiApp::onKeyEvent);
+         ofAddListener(ofEvents().keyReleased, this, &ofImGuiApp::onKeyEvent);
          }
 
       ~ofImGuiApp();
@@ -34,8 +36,6 @@ class ofImGuiApp : public T
       void update();
       void draw();
 
-      void keyPressed(int key);
-      void keyReleased(int key);
       void mouseMoved(int x, int y);
       void mouseDragged(int x, int y, int button);
       void mousePressed(int x, int y, int button);
@@ -44,7 +44,7 @@ class ofImGuiApp : public T
       void windowResized(int w, int h);
 
    private:
-      void onKeyPressed(int key, bool pressed);
+      void onKeyEvent(ofKeyEventArgs& event);
       void onMousePressed(int x, int y, int button, bool pressed);
    };
 
@@ -52,6 +52,9 @@ class ofImGuiApp : public T
 template<typename T>
 ofImGuiApp<T>::~ofImGuiApp()
    {
+   ofRemoveListener(ofEvents().keyPressed, this, &ofImGuiApp::onKeyEvent);
+   ofRemoveListener(ofEvents().keyReleased, this, &ofImGuiApp::onKeyEvent);
+
    ImGui_ImplOpenGL3_Shutdown();
    ImGui::DestroyContext();
    }
@@ -64,6 +67,7 @@ void ofImGuiApp<T>::setup()
    // io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors; // Not yet supported
    // io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos; // Not yet supported
    io.BackendPlatformName = "imgui_impl_openframeworks";
+   io.BackendRendererName = "imgui_impl_opengl3";
 
                              // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
    io.KeyMap[ImGuiKey_Tab] = OF_KEY_TAB;
@@ -82,12 +86,12 @@ void ofImGuiApp<T>::setup()
    io.KeyMap[ImGuiKey_Enter] = OF_KEY_RETURN;
    io.KeyMap[ImGuiKey_Escape] = OF_KEY_ESC;
    //io.KeyMap[ImGuiKey_KeyPadEnter] = ???; // Not yet supported
-   io.KeyMap[ImGuiKey_A] = 'A';
-   io.KeyMap[ImGuiKey_C] = 'C';
-   io.KeyMap[ImGuiKey_V] = 'V';
-   io.KeyMap[ImGuiKey_X] = 'X';
-   io.KeyMap[ImGuiKey_Y] = 'Y';
-   io.KeyMap[ImGuiKey_Z] = 'Z';
+   io.KeyMap[ImGuiKey_A] = 'a';
+   io.KeyMap[ImGuiKey_C] = 'c';
+   io.KeyMap[ImGuiKey_V] = 'v';
+   io.KeyMap[ImGuiKey_X] = 'x';
+   io.KeyMap[ImGuiKey_Y] = 'y';
+   io.KeyMap[ImGuiKey_Z] = 'z';
 
    // io.ClipboardUserData = ???; // Not yet supported
    // io.GetClipboardTextFn = ???; // Not yet supported
@@ -113,8 +117,8 @@ void ofImGuiApp<T>::draw()
    ImGui_ImplOpenGL3_NewFrame();
 
    ImGuiIO& io = ImGui::GetIO();
-   // io.DeltaTime = ???; // Not yet supported 
-   io.DisplaySize = ImVec2((float) ofGetWidth(), (float) ofGetHeight());
+   // io.DeltaTime = ???; // Not yet supported
+   io.DisplaySize = ImVec2(static_cast<float>(ofGetWidth()), static_cast<float>(ofGetHeight()));
    // io.DisplayFramebufferScale = ???; // Not yet supported
    
    ImGui::NewFrame();
@@ -124,22 +128,6 @@ void ofImGuiApp<T>::draw()
    ImGui::Render();
    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
    ImGui::EndFrame();
-   }
-
-template<typename T>
-void ofImGuiApp<T>::keyPressed(int key)
-   {
-   onKeyPressed(key, true /*pressed*/);
-
-   T::keyPressed(key);
-   }
-
-template<typename T>
-void ofImGuiApp<T>::keyReleased(int key)
-   {
-   onKeyPressed(key, false /*pressed*/);
-
-   T::keyReleased(key);
    }
 
 template<typename T>
@@ -198,8 +186,19 @@ void ofImGuiApp<T>::windowResized(int w, int h)
    }
 
 template<typename T>
-void ofImGuiApp<T>::onKeyPressed(int key, bool pressed)
+void ofImGuiApp<T>::onKeyEvent(ofKeyEventArgs& event)
    {
+   const bool pressed = (event.type == ofKeyEventArgs::Type::Pressed);
+   int key = event.key;
+
+                             // Unicode control codes (CTRL+A to CTRL+Z)
+   if (event.hasModifier(OF_KEY_CONTROL) &&
+       !event.isRepeat &&
+       event.codepoint >= 1 && event.codepoint <= 26)
+      {
+      key = 'a' + (event.codepoint - 1);
+      }
+
    ImGuiIO& io = ImGui::GetIO();
 
    if (pressed && key <= 255 && isprint(key))
@@ -210,81 +209,81 @@ void ofImGuiApp<T>::onKeyPressed(int key, bool pressed)
 
    switch (key)
       {
-      case OF_KEY_SHIFT:
-      case OF_KEY_LEFT_SHIFT:
-      case OF_KEY_RIGHT_SHIFT:
-         {
-         io.KeyShift = pressed;
-         break;
-         }
-      case OF_KEY_CONTROL:
-      case OF_KEY_LEFT_CONTROL:
-      case OF_KEY_RIGHT_CONTROL:
-         {
-         io.KeyCtrl = pressed;
-         break;
-         }
-      case OF_KEY_ALT:
-      case OF_KEY_LEFT_ALT:
-      case OF_KEY_RIGHT_ALT:
-         {
-         io.KeyAlt = pressed;
-         break;
-         }
-      case OF_KEY_SUPER:
-      case OF_KEY_LEFT_SUPER:
-      case OF_KEY_RIGHT_SUPER:
-         {
-         io.KeySuper = pressed;
-         break;
-         }
-      case OF_KEY_LEFT:
-         {
-         io.KeysDown[VK_LEFT] = pressed;
-         break;
-         }
-      case OF_KEY_RIGHT:
-         {
-         io.KeysDown[VK_RIGHT] = pressed;
-         break;
-         }
-      case OF_KEY_UP:
-         {
-         io.KeysDown[VK_UP] = pressed;
-         break;
-         }
-      case OF_KEY_DOWN:
-         {
-         io.KeysDown[VK_DOWN] = pressed;
-         break;
-         }
-      case OF_KEY_PAGE_UP:
-         {
-         io.KeysDown[VK_PRIOR] = pressed;
-         break;
-         }
-      case OF_KEY_PAGE_DOWN:
-         {
-         io.KeysDown[VK_NEXT] = pressed;
-         break;
-         }
-      case OF_KEY_HOME:
-         {
-         io.KeysDown[VK_HOME] = pressed;
-         break;
-         }
-      case OF_KEY_END:
-         {
-         io.KeysDown[VK_END] = pressed;
-         break;
-         }
-      case OF_KEY_INSERT:
-         {
-         io.KeysDown[VK_INSERT] = pressed;
-         break;
-         }
-      default:
-         break;
+         case OF_KEY_SHIFT:
+         case OF_KEY_LEFT_SHIFT:
+         case OF_KEY_RIGHT_SHIFT:
+            {
+            io.KeyShift = pressed;
+            break;
+            }
+         case OF_KEY_CONTROL:
+         case OF_KEY_LEFT_CONTROL:
+         case OF_KEY_RIGHT_CONTROL:
+            {
+            io.KeyCtrl = pressed;
+            break;
+            }
+         case OF_KEY_ALT:
+         case OF_KEY_LEFT_ALT:
+         case OF_KEY_RIGHT_ALT:
+            {
+            io.KeyAlt = pressed;
+            break;
+            }
+         case OF_KEY_SUPER:
+         case OF_KEY_LEFT_SUPER:
+         case OF_KEY_RIGHT_SUPER:
+            {
+            io.KeySuper = pressed;
+            break;
+            }
+         case OF_KEY_LEFT:
+            {
+            io.KeysDown[VK_LEFT] = pressed;
+            break;
+            }
+         case OF_KEY_RIGHT:
+            {
+            io.KeysDown[VK_RIGHT] = pressed;
+            break;
+            }
+         case OF_KEY_UP:
+            {
+            io.KeysDown[VK_UP] = pressed;
+            break;
+            }
+         case OF_KEY_DOWN:
+            {
+            io.KeysDown[VK_DOWN] = pressed;
+            break;
+            }
+         case OF_KEY_PAGE_UP:
+            {
+            io.KeysDown[VK_PRIOR] = pressed;
+            break;
+            }
+         case OF_KEY_PAGE_DOWN:
+            {
+            io.KeysDown[VK_NEXT] = pressed;
+            break;
+            }
+         case OF_KEY_HOME:
+            {
+            io.KeysDown[VK_HOME] = pressed;
+            break;
+            }
+         case OF_KEY_END:
+            {
+            io.KeysDown[VK_END] = pressed;
+            break;
+            }
+         case OF_KEY_INSERT:
+            {
+            io.KeysDown[VK_INSERT] = pressed;
+            break;
+            }
+         default:
+            break;
       }
    }
 
