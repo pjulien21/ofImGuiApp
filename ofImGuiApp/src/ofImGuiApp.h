@@ -30,18 +30,18 @@ class ofImGuiApp : public T
          ofAddListener(ofEvents().keyReleased, this, &ofImGuiApp::onKeyEvent);
          }
 
-      ~ofImGuiApp();
+      virtual ~ofImGuiApp();
 
-      void setup();
-      void update();
-      void draw();
+      virtual void setup();
+      virtual void update();
+      virtual void draw();
 
-      void mouseMoved(int x, int y);
-      void mouseDragged(int x, int y, int button);
-      void mousePressed(int x, int y, int button);
-      void mouseReleased(int x, int y, int button);
-      void mouseScrolled(int x, int y, float scrollX, float scrollY);
-      void windowResized(int w, int h);
+      virtual void mouseMoved(int x, int y);
+      virtual void mouseDragged(int x, int y, int button);
+      virtual void mousePressed(int x, int y, int button);
+      virtual void mouseReleased(int x, int y, int button);
+      virtual void mouseScrolled(int x, int y, float scrollX, float scrollY);
+      virtual void windowResized(int w, int h);
 
    private:
       void onKeyEvent(ofKeyEventArgs& event);
@@ -209,81 +209,81 @@ void ofImGuiApp<T>::onKeyEvent(ofKeyEventArgs& event)
 
    switch (key)
       {
-         case OF_KEY_SHIFT:
-         case OF_KEY_LEFT_SHIFT:
-         case OF_KEY_RIGHT_SHIFT:
-            {
-            io.KeyShift = pressed;
-            break;
-            }
-         case OF_KEY_CONTROL:
-         case OF_KEY_LEFT_CONTROL:
-         case OF_KEY_RIGHT_CONTROL:
-            {
-            io.KeyCtrl = pressed;
-            break;
-            }
-         case OF_KEY_ALT:
-         case OF_KEY_LEFT_ALT:
-         case OF_KEY_RIGHT_ALT:
-            {
-            io.KeyAlt = pressed;
-            break;
-            }
-         case OF_KEY_SUPER:
-         case OF_KEY_LEFT_SUPER:
-         case OF_KEY_RIGHT_SUPER:
-            {
-            io.KeySuper = pressed;
-            break;
-            }
-         case OF_KEY_LEFT:
-            {
-            io.KeysDown[VK_LEFT] = pressed;
-            break;
-            }
-         case OF_KEY_RIGHT:
-            {
-            io.KeysDown[VK_RIGHT] = pressed;
-            break;
-            }
-         case OF_KEY_UP:
-            {
-            io.KeysDown[VK_UP] = pressed;
-            break;
-            }
-         case OF_KEY_DOWN:
-            {
-            io.KeysDown[VK_DOWN] = pressed;
-            break;
-            }
-         case OF_KEY_PAGE_UP:
-            {
-            io.KeysDown[VK_PRIOR] = pressed;
-            break;
-            }
-         case OF_KEY_PAGE_DOWN:
-            {
-            io.KeysDown[VK_NEXT] = pressed;
-            break;
-            }
-         case OF_KEY_HOME:
-            {
-            io.KeysDown[VK_HOME] = pressed;
-            break;
-            }
-         case OF_KEY_END:
-            {
-            io.KeysDown[VK_END] = pressed;
-            break;
-            }
-         case OF_KEY_INSERT:
-            {
-            io.KeysDown[VK_INSERT] = pressed;
-            break;
-            }
-         default:
-            break;
+      case OF_KEY_SHIFT:
+      case OF_KEY_LEFT_SHIFT:
+      case OF_KEY_RIGHT_SHIFT:
+         {
+         io.KeyShift = pressed;
+         break;
+         }
+      case OF_KEY_CONTROL:
+      case OF_KEY_LEFT_CONTROL:
+      case OF_KEY_RIGHT_CONTROL:
+         {
+         io.KeyCtrl = pressed;
+         break;
+         }
+      case OF_KEY_ALT:
+      case OF_KEY_LEFT_ALT:
+      case OF_KEY_RIGHT_ALT:
+         {
+         io.KeyAlt = pressed;
+         break;
+         }
+      case OF_KEY_SUPER:
+      case OF_KEY_LEFT_SUPER:
+      case OF_KEY_RIGHT_SUPER:
+         {
+         io.KeySuper = pressed;
+         break;
+         }
+      case OF_KEY_LEFT:
+         {
+         io.KeysDown[VK_LEFT] = pressed;
+         break;
+         }
+      case OF_KEY_RIGHT:
+         {
+         io.KeysDown[VK_RIGHT] = pressed;
+         break;
+         }
+      case OF_KEY_UP:
+         {
+         io.KeysDown[VK_UP] = pressed;
+         break;
+         }
+      case OF_KEY_DOWN:
+         {
+         io.KeysDown[VK_DOWN] = pressed;
+         break;
+         }
+      case OF_KEY_PAGE_UP:
+         {
+         io.KeysDown[VK_PRIOR] = pressed;
+         break;
+         }
+      case OF_KEY_PAGE_DOWN:
+         {
+         io.KeysDown[VK_NEXT] = pressed;
+         break;
+         }
+      case OF_KEY_HOME:
+         {
+         io.KeysDown[VK_HOME] = pressed;
+         break;
+         }
+      case OF_KEY_END:
+         {
+         io.KeysDown[VK_END] = pressed;
+         break;
+         }
+      case OF_KEY_INSERT:
+         {
+         io.KeysDown[VK_INSERT] = pressed;
+         break;
+         }
+      default:
+         break;
       }
    }
 
